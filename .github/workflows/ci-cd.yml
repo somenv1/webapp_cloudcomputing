@@ -1,0 +1,48 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: scalable-web-app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      # Build and push container step (template)
+      - name: Log in to registry (template)
+        run: echo "Configure registry login steps (ECR/GCR/DOCR) and replace this step"
+
+      - name: Build image
+        run: |
+          docker build -t $IMAGE_NAME:latest .
+      - name: Push image (template)
+        run: |
+          echo "Push image to your registry here. Configure secrets: REGISTRY, REGISTRY_USERNAME, REGISTRY_PASSWORD"
+
+      # Deploy to Kubernetes (template)
+      - name: Deploy to Kubernetes (template)
+        run: |
+          echo "Set up kubeconfig as secret (KUBECONFIG) and use kubectl to apply k8s manifests"
